@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grammar Quiz — Units 13-20</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+      max-width: 560px;
+      width: 100%;
+      overflow: hidden;
+    }
+    header {
+      background: #f8fafc;
+      padding: 20px 24px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    header h1 { font-size: 1.25rem; color: #1e293b; }
+    header p { color: #64748b; font-size: 0.875rem; margin-top: 4px; }
+    header a { color: #2563eb; font-size: 0.875rem; }
+    .progress-bar {
+      height: 6px;
+      background: #e2e8f0;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #2563eb;
+      transition: width .3s;
+    }
+    .body { padding: 24px; }
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-bottom: 12px;
+    }
+    .unit-badge {
+      background: #eff6ff;
+      color: #2563eb;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+    .question { font-size: 1.1rem; font-weight: 600; color: #1e293b; margin-bottom: 20px; line-height: 1.4; }
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .option {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 14px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      background: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .option:hover:not(:disabled) { border-color: #2563eb; background: #f8fafc; }
+    .option.selected { border-color: #2563eb; background: #eff6ff; }
+    .option.correct { border-color: #16a34a; background: #f0fdf4; color: #166534; }
+    .option.wrong { border-color: #dc2626; background: #fef2f2; color: #991b1b; }
+    .option:disabled { cursor: default; }
+    .feedback { margin-top: 16px; padding: 12px; border-radius: 8px; font-size: 0.95rem; display: none; }
+    .feedback.show { display: block; }
+    .feedback.ok { background: #f0fdf4; color: #166534; }
+    .feedback.bad { background: #fef2f2; color: #991b1b; }
+    footer {
+      padding: 16px 24px 24px;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+    button.btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-primary { background: #2563eb; color: #fff; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-primary:disabled { background: #94a3b8; cursor: not-allowed; }
+    .btn-secondary { background: #f1f5f9; color: #475569; }
+    .screen { display: none; }
+    .screen.active { display: block; }
+    .start-screen { text-align: center; padding: 32px 24px; }
+    .start-screen h2 { font-size: 1.4rem; margin-bottom: 12px; }
+    .start-screen p { color: #64748b; margin-bottom: 8px; line-height: 1.5; }
+    .start-screen ul { text-align: left; margin: 16px auto; max-width: 320px; color: #475569; font-size: 0.95rem; }
+    .result-screen { text-align: center; padding: 32px 24px; }
+    .score-circle {
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: #eff6ff;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 2rem; font-weight: 700; color: #2563eb;
+    }
+    .result-screen h2 { margin-bottom: 8px; }
+    .result-screen p { color: #64748b; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <header>
+      <h1 id="quizTitle">Grammar Quiz</h1>
+      <p>Units 13-20 · Elementary · 100 questions · <a href="revision.html">Revision notes</a></p>
+    </header>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+    <div id="startScreen" class="screen active start-screen">
+      <h2>Ready for the test?</h2>
+      <p>100 multiple-choice questions covering Units 13-20.</p>
+      <ul>
+        <li>One question at a time</li>
+        <li>4 answer choices (A–D)</li>
+        <li>See your score at the end</li>
+      </ul>
+      <p style="margin-top:16px;font-size:0.9rem;">Tip: Read <a href="revision.html">revision notes</a> first!</p>
+      <footer style="justify-content:center;padding-top:24px;">
+        <button class="btn btn-primary" id="startBtn">Start Quiz</button>
+      </footer>
+    </div>
+
+    <div id="quizScreen" class="screen">
+      <div class="body">
+        <div class="meta">
+          <span>Question <strong id="qNum">1</strong> / <strong id="qTotal">100</strong></span>
+          <span class="unit-badge" id="unitBadge">Unit 1</span>
+        </div>
+        <div class="question" id="questionText"></div>
+        <div class="options" id="options"></div>
+        <div class="feedback" id="feedback"></div>
+      </div>
+      <footer>
+        <button class="btn btn-secondary" id="prevBtn" disabled>Previous</button>
+        <button class="btn btn-primary" id="nextBtn" disabled>Next</button>
+      </footer>
+    </div>
+
+    <div id="resultScreen" class="screen result-screen">
+      <div class="score-circle" id="scoreCircle">0%</div>
+      <h2>Test Complete!</h2>
+      <p id="resultText">You got 0 out of 100 correct.</p>
+      <footer style="justify-content:center;">
+        <button class="btn btn-secondary" id="reviewBtn">Review Answers</button>
+        <button class="btn btn-primary" id="restartBtn">Try Again</button>
+      </footer>
+    </div>
+  </div>
+
+  <script src="questions.js"></script>
+  <script>
+    const UNIT_NAMES = {
+      // 1: "am/is/are", 2: "am/is/are (questions)", 3: "Present continuous",
+      // 4: "Present continuous (questions)", 5: "Present simple", 6: "Present simple negative",
+      // 7: "Present simple questions", 8: "Continuous vs simple", 9: "have / have got",
+      // 10: "was/were", 11: "Past simple", 12: "Past simple negative & questions",
+      13: "Past Continuous",
+      14: "Past Continuous vs Past Simple",
+      15: "Present Perfect (1)",
+      16: "Present Perfect (2)",
+      17: "Have you ever...?",
+      18: "How long have you...?",
+      19: "for / since / ago",
+      20: "Present Perfect vs Past Simple"
+    };
+
+    let current = 0;
+    let answers = new Array(QUIZ.questions.length).fill(null);
+    let reviewMode = false;
+
+    const startScreen = document.getElementById("startScreen");
+    const quizScreen = document.getElementById("quizScreen");
+    const resultScreen = document.getElementById("resultScreen");
+    const questionText = document.getElementById("questionText");
+    const optionsEl = document.getElementById("options");
+    const feedback = document.getElementById("feedback");
+    const qNum = document.getElementById("qNum");
+    const qTotal = document.getElementById("qTotal");
+    const unitBadge = document.getElementById("unitBadge");
+    const progressFill = document.getElementById("progressFill");
+    const nextBtn = document.getElementById("nextBtn");
+    const prevBtn = document.getElementById("prevBtn");
+
+    document.getElementById("quizTitle").textContent = QUIZ.title;
+    qTotal.textContent = QUIZ.questions.length;
+
+    function showScreen(screen) {
+      [startScreen, quizScreen, resultScreen].forEach(s => s.classList.remove("active"));
+      screen.classList.add("active");
+    }
+
+    function renderQuestion() {
+      const q = QUIZ.questions[current];
+      qNum.textContent = current + 1;
+      unitBadge.textContent = "Unit " + q.unit + ": " + UNIT_NAMES[q.unit];
+      questionText.textContent = q.q;
+      progressFill.style.width = ((current + 1) / QUIZ.questions.length * 100) + "%";
+
+      optionsEl.innerHTML = "";
+      feedback.classList.remove("show", "ok", "bad");
+
+      const letters = ["A", "B", "C", "D"];
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement("button");
+        btn.className = "option";
+        btn.textContent = letters[i] + ". " + opt;
+        btn.dataset.index = i;
+
+        if (answers[current] !== null) {
+          btn.disabled = true;
+          if (i === q.answer) btn.classList.add("correct");
+          if (answers[current] === i && i !== q.answer) btn.classList.add("wrong");
+          if (answers[current] === i) btn.classList.add("selected");
+        }
+
+        btn.addEventListener("click", () => selectAnswer(i));
+        optionsEl.appendChild(btn);
+      });
+
+      prevBtn.disabled = current === 0;
+      updateNextButton();
+    }
+
+    function selectAnswer(index) {
+      if (answers[current] !== null && !reviewMode) return;
+      if (reviewMode) return;
+      answers[current] = index;
+      renderQuestion();
+      const q = QUIZ.questions[current];
+      feedback.classList.add("show");
+      if (index === q.answer) {
+        feedback.classList.add("ok");
+        feedback.textContent = "Correct!";
+      } else {
+        feedback.classList.add("bad");
+        feedback.textContent = "Incorrect. The correct answer is " + ["A","B","C","D"][q.answer] + ".";
+      }
+      updateNextButton();
+    }
+
+    function updateNextButton() {
+      if (current === QUIZ.questions.length - 1) {
+        nextBtn.textContent = answers.every(a => a !== null) ? "Finish" : "Next";
+        nextBtn.disabled = answers[current] === null && !reviewMode;
+      } else {
+        nextBtn.textContent = "Next";
+        nextBtn.disabled = answers[current] === null && !reviewMode;
+      }
+    }
+
+    function score() {
+      return answers.reduce((acc, a, i) => acc + (a === QUIZ.questions[i].answer ? 1 : 0), 0);
+    }
+
+    function showResults() {
+      const s = score();
+      const pct = Math.round(s / QUIZ.questions.length * 100);
+      document.getElementById("scoreCircle").textContent = pct + "%";
+      document.getElementById("resultText").textContent =
+        "You got " + s + " out of " + QUIZ.questions.length + " correct.";
+      showScreen(resultScreen);
+      reviewMode = false;
+    }
+
+    document.getElementById("startBtn").addEventListener("click", () => {
+      current = 0;
+      answers = new Array(QUIZ.questions.length).fill(null);
+      reviewMode = false;
+      showScreen(quizScreen);
+      renderQuestion();
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (current < QUIZ.questions.length - 1) {
+        current++;
+        renderQuestion();
+      } else if (answers.every(a => a !== null)) {
+        showResults();
+      }
+    });
+
+    prevBtn.addEventListener("click", () => {
+      if (current > 0) {
+        current--;
+        renderQuestion();
+      }
+    });
+
+    document.getElementById("restartBtn").addEventListener("click", () => {
+      showScreen(startScreen);
+    });
+
+    document.getElementById("reviewBtn").addEventListener("click", () => {
+      reviewMode = true;
+      current = 0;
+      showScreen(quizScreen);
+      renderQuestion();
+      nextBtn.disabled = false;
+    });
+  </script>
+</body>
+</html>
